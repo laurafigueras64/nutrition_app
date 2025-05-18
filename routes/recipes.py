@@ -8,12 +8,18 @@ recipes_bp = Blueprint('recipes', __name__, url_prefix='/recipes')
 @recipes_bp.route('/', methods=['GET', 'POST'])
 def recipes():
     conn = get_db()
+
     if request.method == 'POST':
         try:
             recipe_name = request.form['recipe_name']
-            food_id = int(request.form['food_id'])
-            quantity = float(request.form['quantity'])
+            food_ids = request.form.getlist('food_id')
+            quantities = request.form.getlist('quantity')
 
+            # Ensure parallel food_id and quantity pairs
+            if len(food_ids) != len(quantities):
+                raise ValueError("Mismatched food_id and quantity inputs")
+
+            # Create or retrieve recipe
             recipe = conn.execute("SELECT id FROM recipes WHERE name = ?", (recipe_name,)).fetchone()
             if not recipe:
                 conn.execute("INSERT INTO recipes (name) VALUES (?)", (recipe_name,))
@@ -23,17 +29,24 @@ def recipes():
             else:
                 recipe_id = recipe['id']
 
-            conn.execute("""
-                INSERT INTO recipe_items (recipe_id, food_id, quantity)
-                VALUES (?, ?, ?)""",
-                (recipe_id, food_id, quantity)
-            )
+            # Add all ingredients
+            for food_id_str, qty_str in zip(food_ids, quantities):
+                food_id = int(food_id_str)
+                quantity = float(qty_str)
+                conn.execute("""
+                    INSERT INTO recipe_items (recipe_id, food_id, quantity)
+                    VALUES (?, ?, ?)""",
+                    (recipe_id, food_id, quantity)
+                )
             conn.commit()
-            current_app.logger.info(f"Added food ID {food_id} to recipe '{recipe_name}' (qty: {quantity}g)")
+            current_app.logger.info(f"Added multiple foods to recipe '{recipe_name}'")
+
         except Exception as e:
             current_app.logger.error(f"Error updating recipe: {e}")
+
         return redirect('/recipes')
 
+    # GET: Display form and recipes
     foods = conn.execute("SELECT * FROM foods").fetchall()
     recipe_rows = conn.execute("SELECT * FROM recipes").fetchall()
     recipes = []
@@ -50,7 +63,7 @@ def recipes():
         total_carb = sum(item['carbs'] * item['quantity'] / 100 for item in items)
         total_fat = sum(item['fat'] * item['quantity'] / 100 for item in items)
 
-        recipes.recipes_bpend({
+        recipes.append({
             'name': recipe['name'],
             'calories': round(total_cals, 1),
             'protein': round(total_prot, 1),

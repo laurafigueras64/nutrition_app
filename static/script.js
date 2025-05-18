@@ -26,3 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function addIngredient() {
+    const container = document.getElementById('ingredients-container');
+    const newIngredient = document.createElement('div');
+    newIngredient.classList.add('ingredient');
+    newIngredient.innerHTML = `
+        <select name="food_id">
+            ${foodsOptionsHTML}
+        </select>
+        <input name="quantity" type="number" step="0.1" placeholder="Quantity (g)">
+    `;
+    container.appendChild(newIngredient);
+}
