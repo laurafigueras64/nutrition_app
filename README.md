@@ -90,10 +90,15 @@ Then open your browser and go to:
 
 ```
 ./
-├── app.py                 # Flask backend
-├── schema.sql             # SQL schema for DB
+├── routes/
+│   ├── __init__.py
+│   ├── foods.py
+│   ├── recipes.py
+│   ├── planner.py
+│   └── calculator.py
+├── schema.sql
 ├── db/
-│   └── nutrition.db       # SQLite DB file
+│   └── nutrition.db
 ├── templates/
 │   ├── index.html
 │   ├── foods.html
@@ -102,7 +107,7 @@ Then open your browser and go to:
 ├── static/
 │   ├── style.css
 │   └── script.js
-├── venv/                  # Virtual environment (not pushed to Git)
+├── venv/
 ├── README.md
 └── requirements.txt
 ```
