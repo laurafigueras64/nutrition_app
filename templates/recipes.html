@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Recipes - Nutrition Tracker{% endblock %}
+
+{% block content %}
+<h2>Create a Recipe</h2>
+<form method="POST" class="form-grid">
+    <input name="recipe_name" placeholder="Recipe Name" required>
+    <select name="food_id">
+        {% for food in foods %}
+        <option value="{{ food.id }}">{{ food.name }}</option>
+        {% endfor %}
+    </select>
+    <input name="quantity" type="number" step="0.1" placeholder="Quantity (g)">
+    <button type="submit">Add to Recipe</button>
+</form>
+
+<h2>Recipe List</h2>
+<ul>
+    {% for recipe in recipes %}
+    <li>
+        <strong>{{ recipe.name }}</strong><br>
+        Total: {{ recipe.calories }} kcal, {{ recipe.protein }}g protein, {{ recipe.carbs }}g carbs, {{ recipe.fat }}g fat
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

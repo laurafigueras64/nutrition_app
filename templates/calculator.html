@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Macro Calculator - Nutrition Tracker{% endblock %}
+
+{% block content %}
+<h2>Macro Calculator</h2>
+
+<form method="POST" class="form-grid">
+    <label for="age">Age:</label>
+    <input type="number" name="age" required>
+
+    <label for="weight">Weight (kg):</label>
+    <input type="number" name="weight" required>
+
+    <label for="height">Height (cm):</label>
+    <input type="number" name="height" required>
+
+    <label for="gender">Gender:</label>
+    <select name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
+
+    <label for="activity">Activity Level:</label>
+    <select name="activity" required>
+        <option value="1.2">Sedentary</option>
+        <option value="1.375">Lightly active</option>
+        <option value="1.55">Moderately active</option>
+        <option value="1.725">Very active</option>
+        <option value="1.9">Extra active</option>
+    </select>
+
+    <label for="goal">Goal:</label>
+    <select name="goal" required>
+        <option value="maintain">Maintain</option>
+        <option value="lose">Lose Weight</option>
+        <option value="gain">Gain Muscle</option>
+    </select>
+
+    <button type="submit">Calculate</button>
+</form>
+
+{% if macros %}
+<h3>Estimated Daily Macros</h3>
+<ul>
+    <li><strong>Calories:</strong> {{ macros.calories }} kcal</li>
+    <li><strong>Protein:</strong> {{ macros.protein }} g</li>
+    <li><strong>Carbs:</strong> {{ macros.carbs }} g</li>
+    <li><strong>Fat:</strong> {{ macros.fat }} g</li>
+</ul>
+{% endif %}
+{% endblock %}

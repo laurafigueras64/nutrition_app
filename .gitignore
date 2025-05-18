@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+venv_nutrition_app/
+
+# SQLite database files
+*.db
+
+# Flask specific
+instance/
+*.pyc
+
+# Environment variables
+.env
+
+# VS Code / IDE configs
+.vscode/
+.idea/
+
+# MacOS and system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Python dependency cache
+pip-wheel-metadata/
