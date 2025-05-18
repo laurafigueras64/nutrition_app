@@ -11,11 +11,11 @@ def foods():
     if request.method == 'POST':
         try:
             name = request.form['name']
-            calories = get_number_or_zero('calories')
-            protein = get_number_or_zero('protein')
-            carbs = get_number_or_zero('carbs')
-            fat = get_number_or_zero('fat')
-            fiber = get_number_or_zero('fiber')
+            calories = get_number_or_zero(request.form.get('calories'))
+            protein = get_number_or_zero(request.form.get('protein'))
+            carbs = get_number_or_zero(request.form.get('carbs'))
+            fat = get_number_or_zero(request.form.get('fat'))
+            fiber = get_number_or_zero(request.form.get('fiber'))
             conn.execute("""
                 INSERT INTO foods (name, calories, protein, carbs, fat, fiber)
                 VALUES (?, ?, ?, ?, ?, ?)""",
@@ -48,15 +48,16 @@ def edit_food(food_id):
     if request.method == 'POST':
         try:
             name = request.form['name']
-            calories = float(request.form.get('calories', 0))
-            protein = float(request.form.get('protein', 0))
-            carbs = float(request.form.get('carbs', 0))
-            fat = float(request.form.get('fat', 0))
+            calories = get_number_or_zero(request.form.get('calories'))
+            protein = get_number_or_zero(request.form.get('protein'))
+            carbs = get_number_or_zero(request.form.get('carbs'))
+            fat = get_number_or_zero(request.form.get('fat'))
+            fiber = get_number_or_zero(request.form.get('fiber'))
             conn.execute("""
                 UPDATE foods
-                SET name = ?, calories = ?, protein = ?, carbs = ?, fat = ?
+                SET name = ?, calories = ?, protein = ?, carbs = ?, fat = ?, fiber = ?
                 WHERE id = ?
-            """, (name, calories, protein, carbs, fat, food_id))
+            """, (name, calories, protein, carbs, fat, fiber, food_id))
             conn.commit()
             current_app.logger.info(f"Updated food ID {food_id}")
             return redirect('/foods')

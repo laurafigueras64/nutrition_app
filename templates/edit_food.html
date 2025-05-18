@@ -5,12 +5,27 @@
 {% block content %}
 <h2>Edit Food</h2>
 <form method="POST" class="form-grid">
-    <input name="name" value="{{ food.name }}" required>
-    <input name="calories" type="number" step="0.1" value="{{ food.calories }}">
-    <input name="protein" type="number" step="0.1" value="{{ food.protein }}">
-    <input name="carbs" type="number" step="0.1" value="{{ food.carbs }}">
-    <input name="fat" type="number" step="0.1" value="{{ food.fat }}">
+
+    <label for="name">Food Name</label>
+    <input id="name" name="name" value="{{ food.name }}" required>
+
+    <label for="calories">Calories (per 100g)</label>
+    <input id="calories" name="calories" type="number" step="0.1" value="{{ food.calories }}">
+
+    <label for="protein">Protein (g)</label>
+    <input id="protein" name="protein" type="number" step="0.1" value="{{ food.protein }}">
+
+    <label for="carbs">Carbohydrates (g)</label>
+    <input id="carbs" name="carbs" type="number" step="0.1" value="{{ food.carbs }}">
+
+    <label for="fat">Fat (g)</label>
+    <input id="fat" name="fat" type="number" step="0.1" value="{{ food.fat }}">
+
+    <label for="fiber">Fiber (g)</label>
+    <input id="fiber" name="fiber" type="number" step="0.1" value="{{ food.fiber }}">
+
     <button type="submit">Update Food</button>
 </form>
+
 <a href="/foods">← Back to Food List</a>
 {% endblock %}
