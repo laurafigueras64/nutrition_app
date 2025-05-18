@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Food - Nutrition Tracker{% endblock %}
+
+{% block content %}
+<h2>Edit Food</h2>
+<form method="POST" class="form-grid">
+    <input name="name" value="{{ food.name }}" required>
+    <input name="calories" type="number" step="0.1" value="{{ food.calories }}">
+    <input name="protein" type="number" step="0.1" value="{{ food.protein }}">
+    <input name="carbs" type="number" step="0.1" value="{{ food.carbs }}">
+    <input name="fat" type="number" step="0.1" value="{{ food.fat }}">
+    <button type="submit">Update Food</button>
+</form>
+<a href="/foods">← Back to Food List</a>
+{% endblock %}

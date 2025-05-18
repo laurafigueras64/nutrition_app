@@ -30,6 +30,25 @@
             <td>{{ food.carbs }}</td>
             <td>{{ food.fat }}</td>
             <td>{{ food.fiber }}</td>
+            <td>
+                <div class="action-buttons">
+                    <!-- Edit -->
+                    <span class="tooltip" data-tooltip="Edit">
+                        <a class="btn edit" href="/foods/edit/{{ food.id }}">
+                        <i class="fas fa-pen"></i>
+                        </a>
+                    </span>
+                    
+                    <!-- Delete -->
+                    <span class="tooltip" data-tooltip="Delete">
+                        <form method="POST" action="/foods/delete/{{ food.id }}" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        </form>
+                    </span>
+                </div>
+            </td>              
         </tr>
         {% endfor %}
     </tbody>

@@ -65,6 +65,40 @@ def foods():
     app.logger.info("Displayed food list")
     return render_template('foods.html', foods=foods)
 
+@app.route('/foods/delete/<int:food_id>', methods=['POST'])
+def delete_food(food_id):
+    try:
+        conn = get_db()
+        conn.execute("DELETE FROM foods WHERE id = ?", (food_id,))
+        conn.commit()
+        app.logger.info(f"Deleted food ID {food_id}")
+    except Exception as e:
+        app.logger.error(f"Error deleting food ID {food_id}: {e}")
+    return redirect('/foods')
+
+@app.route('/foods/edit/<int:food_id>', methods=['GET', 'POST'])
+def edit_food(food_id):
+    conn = get_db()
+    if request.method == 'POST':
+        try:
+            name = request.form['name']
+            calories = float(request.form.get('calories', 0))
+            protein = float(request.form.get('protein', 0))
+            carbs = float(request.form.get('carbs', 0))
+            fat = float(request.form.get('fat', 0))
+            conn.execute("""
+                UPDATE foods
+                SET name = ?, calories = ?, protein = ?, carbs = ?, fat = ?
+                WHERE id = ?
+            """, (name, calories, protein, carbs, fat, food_id))
+            conn.commit()
+            app.logger.info(f"Updated food ID {food_id}")
+            return redirect('/foods')
+        except Exception as e:
+            app.logger.error(f"Error updating food: {e}")
+    food = conn.execute("SELECT * FROM foods WHERE id = ?", (food_id,)).fetchone()
+    return render_template('edit_food.html', food=food)
+
 # ----------------------
 # RECIPE MANAGEMENT
 # ----------------------
