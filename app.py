@@ -27,6 +27,10 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def get_number_or_zero(field):
+    value = request.form.get(field, '').strip()
+    return float(value) if value else 0.0
+
 @app.route('/')
 def index():
     app.logger.info("Visited home page")
@@ -41,14 +45,15 @@ def foods():
     if request.method == 'POST':
         try:
             name = request.form['name']
-            calories = request.form['calories']
-            protein = request.form['protein']
-            carbs = request.form['carbs']
-            fat = request.form['fat']
+            calories = get_number_or_zero('calories')
+            protein = get_number_or_zero('protein')
+            carbs = get_number_or_zero('carbs')
+            fat = get_number_or_zero('fat')
+            fiber = get_number_or_zero('fiber')
             conn.execute("""
-                INSERT INTO foods (name, calories, protein, carbs, fat)
-                VALUES (?, ?, ?, ?, ?)""",
-                (name, calories, protein, carbs, fat)
+                INSERT INTO foods (name, calories, protein, carbs, fat, fiber)
+                VALUES (?, ?, ?, ?, ?, ?)""",
+                (name, calories, protein, carbs, fat, fiber)
             )
             conn.commit()
             app.logger.info(f"Added food: {name}")

@@ -4,7 +4,8 @@ CREATE TABLE foods (
     calories REAL,
     protein REAL,
     carbs REAL,
-    fat REAL
+    fat REAL,
+    fiber REAL
 );
 
 CREATE TABLE recipes (
