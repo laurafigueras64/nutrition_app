@@ -83,3 +83,8 @@ table th, table td {
 table th {
     background-color: #f0f0f0;
 }
+
+nav a.active {
+    text-decoration: underline;
+    color: #2e7d32;
+}
