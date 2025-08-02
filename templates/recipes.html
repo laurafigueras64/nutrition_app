@@ -37,6 +37,16 @@
     <li>
         <strong>{{ recipe.name }}</strong><br>
         Total: {{ recipe.calories }} kcal, {{ recipe.protein }}g protein, {{ recipe.carbs }}g carbs, {{ recipe.fat }}g fat
+        <div class="action-buttons">
+            <!-- Delete -->
+            <span class="tooltip" data-tooltip="Delete">
+                <form method="POST" action="/recipes/delete/{{ recipe.id }}" onsubmit="return confirm('Are you sure?');">
+                <button type="submit" class="btn delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+                </form>
+            </span>
+        </div>
     </li>
     {% endfor %}
 </ul>

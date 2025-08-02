@@ -64,6 +64,7 @@ def recipes():
         total_fat = sum(item['fat'] * item['quantity'] / 100 for item in items)
 
         recipes.append({
+            'id': recipe['id'],
             'name': recipe['name'],
             'calories': round(total_cals, 1),
             'protein': round(total_prot, 1),
@@ -73,3 +74,21 @@ def recipes():
 
     current_app.logger.info("Displayed recipe list")
     return render_template('recipes.html', foods=foods, recipes=recipes)
+
+@recipes_bp.route('/delete/<int:recipe_id>', methods=["POST"])
+def delete_recipe(recipe_id):
+    try:
+        conn = get_db()
+        
+        # First delete associated items
+        conn.execute("DELETE FROM recipe_items WHERE recipe_id = ?", (recipe_id,))
+        
+        # Then delete the recipe itself
+        conn.execute("DELETE FROM recipes WHERE id = ?", (recipe_id,))
+        
+        conn.commit()
+        current_app.logger.info(f"Deleted recipe ID {recipe_id} and its items")
+    except Exception as e:
+        current_app.logger.error(f"Error deleting recipe ID {recipe_id}: {e}")
+    return redirect('/recipes')
+
