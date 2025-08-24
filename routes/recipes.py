@@ -24,10 +24,11 @@ def recipes():
             if not recipe:
                 conn.execute("INSERT INTO recipes (name) VALUES (?)", (recipe_name,))
                 conn.commit()
-                recipes_bp.logger.info(f"Created new recipe: {recipe_name}")
+                current_app.logger.info(f"Created new recipe: {recipe_name}")
                 recipe_id = conn.execute("SELECT id FROM recipes WHERE name = ?", (recipe_name,)).fetchone()['id']
             else:
-                recipe_id = recipe['id']
+                current_app.logger.warning(f"Attempted to create a duplicate recipe: {recipe_name}")
+                return redirect('/recipes')
 
             # Add all ingredients
             for food_id_str, qty_str in zip(food_ids, quantities):
@@ -38,8 +39,10 @@ def recipes():
                     VALUES (?, ?, ?)""",
                     (recipe_id, food_id, quantity)
                 )
+                current_app.logger.info(f"Added ingredient (Food ID: {food_id}, Quantity: {quantity}) to recipe ID {recipe_id}")
+
             conn.commit()
-            current_app.logger.info(f"Added multiple foods to recipe '{recipe_name}'")
+            current_app.logger.info(f"Successfully saved recipe: {recipe_name} (ID: {recipe_id})")
 
         except Exception as e:
             current_app.logger.error(f"Error updating recipe: {e}")
@@ -52,24 +55,31 @@ def recipes():
     recipes = []
 
     for recipe in recipe_rows:
+        ingridents = []
         items = conn.execute("""
-            SELECT fi.quantity, f.calories, f.protein, f.carbs, f.fat
+            SELECT f.name, fi.quantity, f.calories, f.protein, f.carbs, f.fat, f.fiber
             FROM recipe_items fi
             JOIN foods f ON fi.food_id = f.id
             WHERE fi.recipe_id = ?""", (recipe['id'],)).fetchall()
+
+        for item in items:
+            ingridents.append((item['name'], item['quantity']))
 
         total_cals = sum(item['calories'] * item['quantity'] / 100 for item in items)
         total_prot = sum(item['protein'] * item['quantity'] / 100 for item in items)
         total_carb = sum(item['carbs'] * item['quantity'] / 100 for item in items)
         total_fat = sum(item['fat'] * item['quantity'] / 100 for item in items)
+        total_fiber = sum(item['fiber'] * item['quantity'] / 100 for item in items)
 
         recipes.append({
             'id': recipe['id'],
             'name': recipe['name'],
+            'ingredients': ingridents,
             'calories': round(total_cals, 1),
             'protein': round(total_prot, 1),
             'carbs': round(total_carb, 1),
-            'fat': round(total_fat, 1)
+            'fat': round(total_fat, 1),
+            'fiber': round(total_fiber, 1)
         })
 
     current_app.logger.info("Displayed recipe list")

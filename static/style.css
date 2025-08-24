@@ -71,6 +71,42 @@ nav a.active {
     background-color: #45a049;     /* Slightly darker on hover */
 }
 
+/* === Recipe cards === */
+.recipe-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px;
+    width: 100%;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-card h3 {
+    margin: 0 0 8px;
+}
+
+.recipe-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+/* Ingredients take left side */
+.recipe-content ul {
+    flex: 1;
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+/* Chart takes right side with fixed size */
+.recipe-content canvas {
+    width: 200px;
+    height: 200px;
+}
+
 /* === Form Layout === */
 .form-grid {
     display: grid;
